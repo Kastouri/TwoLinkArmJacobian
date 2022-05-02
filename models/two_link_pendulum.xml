@@ -1,0 +1,45 @@
+<mujoco model="TwoLinkPendulum">
+    <option timestep="0.01" solver="Newton" gravity="0 0 -10">
+        <flag sensornoise="enable" energy="enable"/>
+    </option>
+    <compiler angle="degree"/>
+    <size njmax="50" nconmax="10" nstack="200" nuserdata="10" nuser_actuator="10"/>
+
+    <asset>
+        <texture name="texplane" type="2d" builtin="checker" rgb1=".25 .25 .25" rgb2=".3 .3 .3" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
+        <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true"/>
+    </asset>
+    <worldbody>
+        <geom name="floor" pos="0 0 -5" size="0 0 1" type="plane" material="matplane"/>
+        <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
+
+        <body name="shoulder" pos="0 0 0.5" euler="0 0 0">
+            <inertial pos="0 0 0" mass="1" diaginertia="1 1 1"/>
+            <joint name="joint0" type="hinge" pos="0 0 -0.5" axis="1 0 0" frictionloss="0." limited="false" range="-180 180"/>
+            <geom name="shoulder" type="cylinder"  size="0.1 0.5"/>
+            <body name="arm" pos="0 0 1" euler="0 0 0">
+                <inertial pos="0 0 0" mass="0.1" diaginertia="1 1 1"/>
+                <joint name="joint1" type="hinge" pos="0 0 -0.5" axis="1 0 0" frictionloss="0." limited="false" range="-180 180"/>
+                <geom name="arm" type="cylinder"  size="0.1 0.5" rgba="1 0 0 1"/>
+
+            </body>
+        </body>
+    </worldbody>
+    <actuator>
+        <!--general ctrlrange='-1 1' gaintype="user" biastype="user" forcerange="-100 100" gainprm="200 10 10.0 0.1 0.1 0" joint="joint0" name="joint0"/>
+        <general ctrlrange='-1 1' gaintype="user" biastype="user" forcerange="-100 100" gainprm="200 10 10.0 0.1 0.1 0" joint="joint1" name="joint1"/-->
+        <!--position name="position_servo_0" joint="joint0" kp="10" />
+        <position name="position_servo_1" joint="joint1" kp="10" /-->
+        <motor name="torque_servo_0" gear="1" joint="joint0" ctrllimited="true" ctrlrange="-1000 1000" />
+        <motor name="torque_servo_1" gear="1" joint="joint1" ctrllimited="true" ctrlrange="-1000 1000" />
+
+    </actuator>
+
+    <sensor>
+        <jointpos joint="joint0" noise="0.1"/>
+        <jointvel joint="joint0" noise="0.1"/>
+        <jointpos joint="joint1" noise="0.1"/>
+        <jointvel joint="joint1" noise="0.1"/>
+    </sensor>
+
+</mujoco>
